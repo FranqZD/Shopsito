@@ -32,8 +32,6 @@ describe('DashboardOverview', () => {
   it('shows skeleton loaders while loading', () => {
     vi.mocked(apiService.get).mockImplementation(() => new Promise(() => {}));
     render(<DashboardOverview />);
-    const skeletons = screen.getAllByTestId ? undefined : undefined;
-    // Skeleton cards have animate-pulse class
     const container = screen.getByText('Dashboard Overview').closest('div')!.parentElement!;
     const pulsingElements = container.querySelectorAll('.animate-pulse');
     expect(pulsingElements.length).toBe(3);
