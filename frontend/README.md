@@ -1,36 +1,73 @@
-# Shopsito Frontend
+# React + TypeScript + Vite
 
-React frontend for Shopsito, built with Vite and TypeScript.
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-## Scripts
+Currently, two official plugins are available:
 
-| Command             | Description                                      |
-|---------------------|--------------------------------------------------|
-| `npm run dev`       | Start development server (http://localhost:5173)  |
-| `npm run build`     | TypeScript check + production build               |
-| `npm run preview`   | Preview production build                          |
-| `npm run lint`      | Run ESLint                                        |
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
 
-## Environment Variables
+## React Compiler
 
-Copy `.env.example` to `.env` and configure:
+The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
 
-| Variable            | Description                          | Default                  |
-|---------------------|--------------------------------------|--------------------------|
-| `VITE_API_BASE_URL` | Backend API base URL                 | `http://localhost:8080`  |
+## Expanding the ESLint configuration
 
-## Directory Structure
+If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
 
+```js
+export default defineConfig([
+  globalIgnores(['dist']),
+  {
+    files: ['**/*.{ts,tsx}'],
+    extends: [
+      // Other configs...
+
+      // Remove tseslint.configs.recommended and replace with this
+      tseslint.configs.recommendedTypeChecked,
+      // Alternatively, use this for stricter rules
+      tseslint.configs.strictTypeChecked,
+      // Optionally, add this for stylistic rules
+      tseslint.configs.stylisticTypeChecked,
+
+      // Other configs...
+    ],
+    languageOptions: {
+      parserOptions: {
+        project: ['./tsconfig.node.json', './tsconfig.app.json'],
+        tsconfigRootDir: import.meta.dirname,
+      },
+      // other options...
+    },
+  },
+])
 ```
-src/
-├── components/common/  # Shared/reusable components
-├── pages/              # Page components (one directory per page)
-├── services/           # API service layer (Axios client)
-├── utils/              # Shared types and utilities
-└── hooks/              # Custom React hooks
+
+You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+
+```js
+// eslint.config.js
+import reactX from 'eslint-plugin-react-x'
+import reactDom from 'eslint-plugin-react-dom'
+
+export default defineConfig([
+  globalIgnores(['dist']),
+  {
+    files: ['**/*.{ts,tsx}'],
+    extends: [
+      // Other configs...
+      // Enable lint rules for React
+      reactX.configs['recommended-typescript'],
+      // Enable lint rules for React DOM
+      reactDom.configs.recommended,
+    ],
+    languageOptions: {
+      parserOptions: {
+        project: ['./tsconfig.node.json', './tsconfig.app.json'],
+        tsconfigRootDir: import.meta.dirname,
+      },
+      // other options...
+    },
+  },
+])
 ```
-
-## Key Files
-
-- `src/router.tsx` — Centralized routing with lazy-loaded pages
-- `src/services/apiClient.ts` — Shared Axios instance (base URL from env, `/api/v1` prefix)
